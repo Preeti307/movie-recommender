@@ -2,12 +2,20 @@ import os
 import requests
 
 file_id = "1jeYgyI8hEg2xXU8KzrH938WweQYk6fGK"
-url = f"https://drive.google.com/uc?id={file_id}"
+
+def download_file():
+    URL = "https://drive.google.com/uc?export=download"
+    session = requests.Session()
+
+    response = session.get(URL, params={'id': file_id}, stream=True)
+    
+    with open("similarity.pkl", "wb") as f:
+        for chunk in response.iter_content(1024):
+            if chunk:
+                f.write(chunk)
 
 if not os.path.exists("similarity.pkl"):
-    r = requests.get(url)
-    with open("similarity.pkl", "wb") as f:
-        f.write(r.content)
+    download_file()
 
 
 import streamlit as st
