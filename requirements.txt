@@ -1,5 +1,5 @@
-numpy 
+streamlit
 pandas
-strimlit
+numpy
 scikit-learn
-pickle
+requests
