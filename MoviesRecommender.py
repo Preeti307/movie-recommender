@@ -1,3 +1,14 @@
+import os
+import requests
+
+file_id = "1jeYgyI8hEg2xXU8KzrH938WweQYk6fGK"
+url = f"https://drive.google.com/uc?id={file_id}"
+
+if not os.path.exists("similarity.pkl"):
+    r = requests.get(url)
+    with open("similarity.pkl", "wb") as f:
+        f.write(r.content)
+
 
 import streamlit as st
 import pickle
