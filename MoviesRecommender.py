@@ -4,31 +4,23 @@ import requests
 import streamlit as st
 import pickle
 import pandas as pd
+import gdown
 
 # 🔥 Google Drive File ID
 file_id = "1jeYgyI8hEg2xXU8KzrH938WweQYk6fGK"
 
-# 🔥 Function to download large file properly
+# 🔥 Function to download large file properly using gdown
+@st.cache_data
+
 def download_file():
-    URL = "https://drive.google.com/uc?export=download"
-    session = requests.Session()
-
-    response = session.get(URL, params={'id': file_id}, stream=True)
-
-    # Handle large file confirmation
-    for key, value in response.cookies.items():
-        if key.startswith('download_warning'):
-            params = {'id': file_id, 'confirm': value}
-            response = session.get(URL, params=params, stream=True)
-
-    with open("similarity.pkl", "wb") as f:
-        for chunk in response.iter_content(32768):
-            if chunk:
-                f.write(chunk)
+    url = f"https://drive.google.com/uc?id={file_id}"
+    output = "similarity.pkl"
+    gdown.download(url, output, quiet=False)
 
 # 🔥 Download file only if not exists
 if not os.path.exists("similarity.pkl"):
-    download_file()
+    with st.spinner("Downloading similarity.pkl (~176MB). Please wait..."):
+        download_file()
 
 # 🔥 Load data
 movies = pickle.load(open('movies.pkl', 'rb'))
